@@ -49,6 +49,7 @@ type Styles struct {
 	CardStatus         lipgloss.Style
 	ModalBox           lipgloss.Style
 	ModalTitle         lipgloss.Style
+	CopyURLBanner      lipgloss.Style
 	Accent             color.Color
 	Dim                color.Color
 }
@@ -208,5 +209,11 @@ func InitialStyles() Styles {
 			Foreground(accent).
 			Bold(true).
 			MarginBottom(2),
+		CopyURLBanner: lipgloss.NewStyle().
+			Foreground(lipgloss.Color("226")). // Yellow/gold for visibility
+			Bold(true).
+			Background(lipgloss.Color("236")).
+			Padding(0, 2).
+			MarginBottom(1),
 	}
 }

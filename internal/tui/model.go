@@ -41,6 +41,7 @@ type Model struct {
 	SignField           int
 	SignSuccess         bool
 	SignError           string
+	CopyURL             string
 	Styles              Styles
 	Width               int
 	Height              int

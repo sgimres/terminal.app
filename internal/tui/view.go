@@ -37,6 +37,13 @@ func (m Model) View() tea.View {
 	tabBar := lipgloss.JoinHorizontal(lipgloss.Top, tabs...)
 	tabBarCentered := lipgloss.PlaceHorizontal(m.Width, lipgloss.Center, tabBar)
 
+	// Copy URL Banner
+	var copyURLBanner string
+	if m.CopyURL != "" {
+		copyURLBanner = m.Styles.CopyURLBanner.Render("Copy this URL: " + m.CopyURL)
+		copyURLBanner = lipgloss.PlaceHorizontal(m.Width, lipgloss.Center, copyURLBanner)
+	}
+
 	// Main Content
 	var content string
 	switch m.Sections[m.ActiveSection] {
@@ -68,6 +75,7 @@ func (m Model) View() tea.View {
 	finalView := m.Styles.Container.Render(lipgloss.JoinVertical(
 		lipgloss.Center,
 		tabBarCentered,
+		copyURLBanner,
 		contentCentered,
 		secondaryFooterCentered,
 		dividerCentered,
@@ -221,8 +229,8 @@ func (m Model) renderSkills() string {
 	acqLog := lipgloss.JoinVertical(lipgloss.Left, acqEntries...)
 
 	// 3. OSS Contribution Log
-	var ossEntries []string
-	ossEntries = append(ossEntries, m.Styles.SectionHeader.Render("OSS CONTRIBUTION LOG"))
+	var ossLogEntries []string
+	ossLogEntries = append(ossLogEntries, m.Styles.SectionHeader.Render("OSS CONTRIBUTION LOG"))
 	for i, entry := range m.OSSContributionLog {
 		date := m.Styles.LogDate.Render(entry.Date)
 		title := m.Styles.LogTitle.Render(strings.ToLower(entry.Title))
@@ -232,9 +240,13 @@ func (m Model) renderSkills() string {
 		desc := m.Styles.LogDesc.Render(entry.Description)
 
 		row := lipgloss.JoinHorizontal(lipgloss.Top, date, lipgloss.JoinVertical(lipgloss.Left, title, desc))
-		ossEntries = append(ossEntries, row)
+		if !m.SkillGridFocus && i == m.ActiveSkillLog && entry.URL != "" {
+			url := m.Styles.LogDesc.Foreground(lipgloss.Color("226")).Render(entry.URL)
+			row += " " + url
+		}
+		ossLogEntries = append(ossLogEntries, row)
 	}
-	ossLog := lipgloss.JoinVertical(lipgloss.Left, ossEntries...)
+	ossLog := lipgloss.JoinVertical(lipgloss.Left, ossLogEntries...)
 
 	mainView := lipgloss.JoinVertical(lipgloss.Left, bentoGrid, depGraph, acqLog, ossLog)
 	return m.Styles.ContentArea.Render(mainView)
@@ -290,25 +302,26 @@ func (m Model) renderFooter() string {
 		footerItems = append(footerItems, m.Styles.Shortcut.Render("done"))
 	} else {
 		// Contextual Navigation
-		if m.Sections[m.ActiveSection] == "Projects" {
+		switch m.Sections[m.ActiveSection] {
+		case "Projects":
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("↑/↓"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("browse"))
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("/"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("filter"))
-		} else if m.Sections[m.ActiveSection] == "Skills" {
+		case "Skills":
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("tab"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("toggle focus"))
 
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("navigate"))
 			if !m.SkillGridFocus {
 				footerItems = append(footerItems, m.Styles.KeyHint.Render("enter"))
-				footerItems = append(footerItems, m.Styles.Shortcut.Render("open link"))
+				footerItems = append(footerItems, m.Styles.Shortcut.Render("copy url"))
 			}
-		} else if m.Sections[m.ActiveSection] == "Contact" {
+		case "Contact":
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("↑/↓"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("navigate"))
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("enter"))
-			footerItems = append(footerItems, m.Styles.Shortcut.Render("open link"))
+			footerItems = append(footerItems, m.Styles.Shortcut.Render("copy url"))
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("g"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("sign"))
 		}
@@ -323,15 +336,25 @@ func (m Model) renderFooter() string {
 func (m Model) renderContact() string {
 	var contactRows []string
 	for i, link := range m.ContactLinks {
-		var label, value string
+		var label, value, url string
 		if i == m.ActiveContactLink {
 			label = m.Styles.CardLabel.Background(lipgloss.Color("237")).Render(link.Label + ":")
 			value = m.Styles.CardValue.Background(lipgloss.Color("237")).Render(link.Value)
+			if link.URL != "" {
+				url = m.Styles.CardValue.Background(lipgloss.Color("237")).Foreground(lipgloss.Color("226")).Render(link.URL)
+			}
 		} else {
 			label = m.Styles.CardLabel.Render(link.Label + ":")
 			value = m.Styles.CardValue.Render(link.Value)
+			if link.URL != "" {
+				url = m.Styles.CardValue.Foreground(lipgloss.Color("246")).Render(link.URL)
+			}
 		}
-		contactRows = append(contactRows, m.Styles.CardRow.Render(label+" "+value))
+		rowContent := m.Styles.CardRow.Render(label + " " + value)
+		if url != "" {
+			rowContent += " " + url
+		}
+		contactRows = append(contactRows, rowContent)
 	}
 
 	header := lipgloss.JoinVertical(lipgloss.Left,
@@ -341,6 +364,6 @@ func (m Model) renderContact() string {
 	contactInfo := lipgloss.JoinVertical(lipgloss.Left, contactRows...)
 	status := m.Styles.CardStatus.Render(m.ContactStatus)
 
-	inner := lipgloss.JoinVertical(lipgloss.Center, header, contactInfo, status)
+	inner := lipgloss.JoinVertical(lipgloss.Center, header, contactInfo, "", status)
 	return m.Styles.BusinessCard.Render(m.Styles.BusinessCardInner.Render(inner))
 }

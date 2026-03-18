@@ -69,7 +69,7 @@ func AddGuestbookEntry(name, description string, db *sql.DB) error {
 
 func CloseGuestbookDB() {
 	if db != nil {
-		db.Close()
+		_ = db.Close()
 	}
 }
 

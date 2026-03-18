@@ -1,9 +1,8 @@
 package tui
 
 import (
-	"os/exec"
-	"runtime"
 	"strings"
+	"time"
 
 	"profile/internal/data"
 
@@ -27,6 +26,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		m.Spinner, cmd = m.Spinner.Update(msg)
 		return m, cmd
+
+	case ClearCopyURLMsg:
+		m.CopyURL = ""
+		return m, nil
 
 	case tea.KeyPressMsg:
 		if m.SignModal {
@@ -128,12 +131,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			if m.Sections[m.ActiveSection] == "Skills" && !m.SkillGridFocus {
 				if m.ActiveSkillLog < len(m.OSSContributionLog) {
-					m.openBrowser(m.OSSContributionLog[m.ActiveSkillLog].URL)
+					m.CopyURL = m.OSSContributionLog[m.ActiveSkillLog].URL
+					return m, clearCopyURLAfterDelay()
 				}
 			}
 			if m.Sections[m.ActiveSection] == "Contact" {
 				if m.ActiveContactLink < len(m.ContactLinks) {
-					m.openBrowser(m.ContactLinks[m.ActiveContactLink].URL)
+					m.CopyURL = m.ContactLinks[m.ActiveContactLink].URL
+					return m, clearCopyURLAfterDelay()
 				}
 			}
 		case "up", "k":
@@ -252,23 +257,11 @@ func (m *Model) updateFilter() {
 	}
 }
 
-func (m Model) openBrowser(url string) {
-	if url == "" {
-		return
-	}
-	var cmd string
-	var args []string
+type ClearCopyURLMsg struct{}
 
-	switch runtime.GOOS {
-	case "windows":
-		cmd = "rundll32"
-		args = []string{"url.dll,FileProtocolHandler", url}
-	case "darwin":
-		cmd = "open"
-		args = []string{url}
-	default: // Linux and others
-		cmd = "xdg-open"
-		args = []string{url}
+func clearCopyURLAfterDelay() tea.Cmd {
+	return func() tea.Msg {
+		time.Sleep(5 * time.Second)
+		return ClearCopyURLMsg{}
 	}
-	_ = exec.Command(cmd, args...).Start()
 }
