@@ -66,6 +66,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.openBrowser(m.OSSContributionLog[m.ActiveSkillLog].URL)
 				}
 			}
+			if m.Sections[m.ActiveSection] == "Contact" {
+				if m.ActiveContactLink < len(m.ContactLinks) {
+					m.openBrowser(m.ContactLinks[m.ActiveContactLink].URL)
+				}
+			}
 		case "up", "k":
 			if !m.Loading {
 				switch m.Sections[m.ActiveSection] {
@@ -82,6 +87,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						if m.ActiveSkillLog > 0 {
 							m.ActiveSkillLog--
 						}
+					}
+				case "Contact":
+					if m.ActiveContactLink > 0 {
+						m.ActiveContactLink--
 					}
 				default:
 					if m.ActiveSection > 0 {
@@ -105,6 +114,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						if m.ActiveSkillLog < len(m.OSSContributionLog)-1 {
 							m.ActiveSkillLog++
 						}
+					}
+				case "Contact":
+					if m.ActiveContactLink < len(m.ContactLinks)-1 {
+						m.ActiveContactLink++
 					}
 				default:
 					if m.ActiveSection < len(m.Sections)-1 {

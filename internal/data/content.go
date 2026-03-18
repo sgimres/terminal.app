@@ -21,6 +21,13 @@ type LogEntry struct {
 	URL         string
 }
 
+// ContactLink represents a clickable contact link
+type ContactLink struct {
+	Label string
+	Value string
+	URL   string
+}
+
 // Portfolio represents the content of the portfolio
 type Portfolio struct {
 	Sections            []string
@@ -30,6 +37,10 @@ type Portfolio struct {
 	SkillAcquisitionLog []LogEntry
 	OSSContributionLog  []LogEntry
 	Dependencies        map[string][]string
+	ContactName         string
+	ContactTitle        string
+	ContactStatus       string
+	ContactLinks        []ContactLink
 }
 
 // GetDefaultPortfolio returns the default portfolio content
@@ -38,13 +49,22 @@ func GetDefaultPortfolio() Portfolio {
 		Sections: []string{"About", "Projects", "Skills", "Contact"},
 		Content: map[string]string{
 			"About":   "Welcome! I'm a passionate Go developer who loves building **beautiful terminal user interfaces** and high-performance backend systems.\nI enjoy solving complex problems and exploring new technologies. Currently focusing on distributed systems and terminal-based developer tools.",
-			"Contact": "GitHub: github.com/username\nTwitter: @twitterhandle\nEmail: mail@example.com\nLinkedIn: linkedin.com/in/username",
+			"Contact": "GitHub: github.com/username\nTwitter: @twitterhandle\nEmail: mail@example.com\nLinkedIn: listarstnkedin.com/in/username",
 		},
 		Dependencies: map[string][]string{
 			"Go":     {"Bubble Tea", "Lip Gloss", "Gin", "Gorm"},
 			"Python": {"NumPy", "Pandas", "Scikit-Learn", "FastAPI"},
 			"React":  {"Next.js", "Tailwind", "Redux", "Zustand"},
 			"Rust":   {"Helm", "Kustomize", "Client-go", "Prometheus"},
+		},
+		ContactName:   "Go Developer",
+		ContactTitle:  "Terminal Enthusiast",
+		ContactStatus: "available for freelance",
+		ContactLinks: []ContactLink{
+			{Label: "GitHub", Value: "github.com/username", URL: "https://github.com/username"},
+			{Label: "Twitter", Value: "@twitterhandle", URL: "https://twitter.com/twitterhandle"},
+			{Label: "Email", Value: "mail@example.com", URL: "mailto:mail@example.com"},
+			{Label: "LinkedIn", Value: "linkedin.com/in/username", URL: "https://linkedin.com/in/username"},
 		},
 		Projects: []Project{
 			{

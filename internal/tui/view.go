@@ -44,6 +44,8 @@ func (m Model) View() tea.View {
 		content = m.renderProjects()
 	case "Skills":
 		content = m.renderSkills()
+	case "Contact":
+		content = m.renderContact()
 	default:
 		body := m.Content[m.Sections[m.ActiveSection]]
 		content = m.Styles.ContentArea.Render(m.parseDescription(body))
@@ -253,6 +255,11 @@ func (m Model) renderFooter() string {
 				footerItems = append(footerItems, m.Styles.KeyHint.Render("enter"))
 				footerItems = append(footerItems, m.Styles.Shortcut.Render("open link"))
 			}
+		} else if m.Sections[m.ActiveSection] == "Contact" {
+			footerItems = append(footerItems, m.Styles.KeyHint.Render("↑/↓"))
+			footerItems = append(footerItems, m.Styles.Shortcut.Render("navigate"))
+			footerItems = append(footerItems, m.Styles.KeyHint.Render("enter"))
+			footerItems = append(footerItems, m.Styles.Shortcut.Render("open link"))
 		}
 
 		footerItems = append(footerItems, m.Styles.KeyHint.Render("q"))
@@ -260,4 +267,29 @@ func (m Model) renderFooter() string {
 	}
 
 	return lipgloss.JoinHorizontal(lipgloss.Top, footerItems...)
+}
+
+func (m Model) renderContact() string {
+	var contactRows []string
+	for i, link := range m.ContactLinks {
+		var label, value string
+		if i == m.ActiveContactLink {
+			label = m.Styles.CardLabel.Background(lipgloss.Color("237")).Render(link.Label + ":")
+			value = m.Styles.CardValue.Background(lipgloss.Color("237")).Render(link.Value)
+		} else {
+			label = m.Styles.CardLabel.Render(link.Label + ":")
+			value = m.Styles.CardValue.Render(link.Value)
+		}
+		contactRows = append(contactRows, m.Styles.CardRow.Render(label+" "+value))
+	}
+
+	header := lipgloss.JoinVertical(lipgloss.Left,
+		m.Styles.CardName.Render(m.ContactName),
+		m.Styles.CardTitle.Render(m.ContactTitle),
+	)
+	contactInfo := lipgloss.JoinVertical(lipgloss.Left, contactRows...)
+	status := m.Styles.CardStatus.Render(m.ContactStatus)
+
+	inner := lipgloss.JoinVertical(lipgloss.Center, header, contactInfo, status)
+	return m.Styles.BusinessCard.Render(m.Styles.BusinessCardInner.Render(inner))
 }

@@ -41,6 +41,14 @@ type Styles struct {
 	LogTitle           lipgloss.Style
 	LogDesc            lipgloss.Style
 	SectionHeader      lipgloss.Style
+	BusinessCard       lipgloss.Style
+	BusinessCardInner  lipgloss.Style
+	CardName           lipgloss.Style
+	CardTitle          lipgloss.Style
+	CardRow            lipgloss.Style
+	CardLabel          lipgloss.Style
+	CardValue          lipgloss.Style
+	CardStatus         lipgloss.Style
 	Accent             color.Color
 	Dim                color.Color
 }
@@ -170,5 +178,31 @@ func InitialStyles() Styles {
 			MarginTop(1).
 			MarginBottom(1).
 			SetString("── "),
+		BusinessCard: lipgloss.NewStyle().
+			Border(lipgloss.NormalBorder()).
+			BorderForeground(border).
+			Padding(2, 4),
+		BusinessCardInner: lipgloss.NewStyle().
+			PaddingLeft(2).
+			Align(lipgloss.Center),
+		CardName: lipgloss.NewStyle().
+			Foreground(accent).
+			Bold(true).
+			MarginBottom(1),
+		CardTitle: lipgloss.NewStyle().
+			Foreground(dim).
+			Italic(true).
+			MarginBottom(2),
+		CardRow: lipgloss.NewStyle().
+			MarginBottom(1),
+		CardLabel: lipgloss.NewStyle().
+			Foreground(accent).
+			Bold(true),
+		CardValue: lipgloss.NewStyle().
+			Foreground(dim),
+		CardStatus: lipgloss.NewStyle().
+			Foreground(accent).
+			Background(lipgloss.Color("237")).
+			Padding(0, 1),
 	}
 }

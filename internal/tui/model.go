@@ -25,6 +25,11 @@ type Model struct {
 	SkillAcquisitionLog []data.LogEntry
 	OSSContributionLog  []data.LogEntry
 	Dependencies        map[string][]string
+	ContactName         string
+	ContactTitle        string
+	ContactStatus       string
+	ContactLinks        []data.ContactLink
+	ActiveContactLink   int
 	ActiveCategory      int
 	ActiveSkillIndex    int
 	SkillGridFocus      bool
@@ -53,6 +58,10 @@ func InitialModel() Model {
 		SkillAcquisitionLog: p.SkillAcquisitionLog,
 		OSSContributionLog:  p.OSSContributionLog,
 		Dependencies:        p.Dependencies,
+		ContactName:         p.ContactName,
+		ContactTitle:        p.ContactTitle,
+		ContactStatus:       p.ContactStatus,
+		ContactLinks:        p.ContactLinks,
 		Loading:             true,
 		Spinner:             s,
 		Styles:              styles,
