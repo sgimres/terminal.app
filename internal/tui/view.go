@@ -54,8 +54,9 @@ func (m Model) View() tea.View {
 	case "Contact":
 		content = m.renderContact()
 	default:
-		body := m.Content[m.Sections[m.ActiveSection]]
-		content = m.Styles.ContentArea.Render(m.parseDescription(body))
+		// body := m.Content[m.Sections[m.ActiveSection]]
+		// content = m.Styles.ContentArea.Render(m.parseDescription(body))
+		content = m.Styles.ContentArea.Render(m.parseDescription(m.Content["About"]))
 	}
 	contentCentered := lipgloss.PlaceHorizontal(m.Width, lipgloss.Center, content)
 
@@ -68,7 +69,7 @@ func (m Model) View() tea.View {
 		Render(strings.Repeat("─", 80))
 	dividerCentered := lipgloss.PlaceHorizontal(m.Width, lipgloss.Center, divider)
 
-	secondaryFooter := m.Styles.Footer.Render("open for new opportunities • 2026")
+	secondaryFooter := m.Styles.Footer.Render("Zero AI was harmed in the making of this app • 2026")
 	secondaryFooterCentered := lipgloss.PlaceHorizontal(m.Width, lipgloss.Center, secondaryFooter)
 
 	// Combined Layout
@@ -180,6 +181,10 @@ func (m Model) renderProjects() string {
 		stack := m.Styles.ProjectStack.Render(fmt.Sprintf("stack: %s", strings.ToLower(p.Stack)))
 
 		details := lipgloss.JoinVertical(lipgloss.Left, title, desc, stack)
+		if p.URL != "" {
+			url := m.Styles.CardValue.Foreground(lipgloss.Color("226")).Render(p.URL)
+			details += "\n" + url
+		}
 		rightPane = m.Styles.ProjectDetailPane.Render(details)
 	} else {
 		rightPane = m.Styles.ProjectDetailPane.Render(m.Styles.ProjectDescription.Render("try another search..."))
@@ -280,16 +285,58 @@ func (m Model) renderDependencyGraph(skill string) string {
 }
 
 func (m Model) parseDescription(desc string) string {
+	var plain strings.Builder
 	parts := strings.Split(desc, "**")
-	var rendered strings.Builder
 	for i, part := range parts {
 		if i%2 == 1 {
-			rendered.WriteString(m.Styles.ProjectBold.Render(part))
+			plain.WriteString(m.Styles.ProjectBold.Render(part))
 		} else {
-			rendered.WriteString(m.Styles.DescriptionText.Render(part))
+			plain.WriteString(m.Styles.DescriptionText.Render(part))
 		}
 	}
-	return rendered.String()
+
+	text := plain.String()
+
+	var wrapped strings.Builder
+	words := strings.Fields(text)
+	lineLen := 0
+	const maxWidth = 48
+
+	for _, word := range words {
+		stripped := stripANSI(word)
+		wordLen := len(stripped)
+
+		if lineLen+wordLen+1 > maxWidth && lineLen > 0 {
+			wrapped.WriteString("\n")
+			lineLen = 0
+		}
+		if lineLen > 0 {
+			wrapped.WriteString(" ")
+			lineLen++
+		}
+		wrapped.WriteString(word)
+		lineLen += wordLen
+	}
+	return wrapped.String()
+}
+
+func stripANSI(s string) string {
+	var result strings.Builder
+	inEscape := false
+	for _, c := range s {
+		if c == '\x1b' {
+			inEscape = true
+			continue
+		}
+		if inEscape && c == 'm' {
+			inEscape = false
+			continue
+		}
+		if !inEscape {
+			result.WriteRune(c)
+		}
+	}
+	return result.String()
 }
 
 func (m Model) renderFooter() string {
@@ -308,6 +355,8 @@ func (m Model) renderFooter() string {
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("browse"))
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("/"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("filter"))
+			footerItems = append(footerItems, m.Styles.KeyHint.Render("enter"))
+			footerItems = append(footerItems, m.Styles.Shortcut.Render("copy url"))
 		case "Skills":
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("tab"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("toggle focus"))

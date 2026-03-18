@@ -5,6 +5,7 @@ type Project struct {
 	Title       string
 	Description string
 	Stack       string
+	URL         string
 }
 
 // SkillCategory represents a group of related skills
@@ -48,104 +49,98 @@ func GetDefaultPortfolio() Portfolio {
 	return Portfolio{
 		Sections: []string{"About", "Projects", "Skills", "Contact"},
 		Content: map[string]string{
-			"About":   "Welcome! I'm a passionate Go developer who loves building **beautiful terminal user interfaces** and high-performance backend systems.\nI enjoy solving complex problems and exploring new technologies. Currently focusing on distributed systems and terminal-based developer tools.",
+			// "About":   "Welcome! I'm a passionate Go developer who loves building **beautiful terminal user interfaces** and high-performance backend systems.\nI enjoy solving complex problems and exploring new technologies. Currently focusing on distributed systems and terminal-based developer tools.",
+			"About":   "** This Application is still under construction **\n Thank you For your understanding",
 			"Contact": "GitHub: github.com/username\nTwitter: @twitterhandle\nEmail: mail@example.com\nLinkedIn: linkedin.com/in/username",
 		},
 		Dependencies: map[string][]string{
-			"Go":     {"Bubble Tea", "Lip Gloss", "Gin", "Gorm"},
-			"Python": {"NumPy", "Pandas", "Scikit-Learn", "FastAPI"},
-			"React":  {"Next.js", "Tailwind", "Redux", "Zustand"},
-			"Rust":   {"Tokio", "Serde", "Actix", "Rustfmt"},
+			"Python": {"Flask", "Scikit-Learn", "PyTorch", "Matplotlib"},
+			"Go":     {"Bubble Tea", "Lip Gloss", "Fiber", "Gin"},
+			"Rust":   {"Tokio", "Serde", "Actix", "Clap"},
+			"Bash":   {"Shell", "Scripting"},
 		},
-		ContactName:   "Go Developer",
+		ContactName:   "Supun Gimres",
 		ContactTitle:  "Terminal Enthusiast",
-		ContactStatus: "available for freelance",
+		ContactStatus: "Let’s get to work.",
 		ContactLinks: []ContactLink{
-			{Label: "GitHub", Value: "github.com/username", URL: "https://github.com/username"},
-			{Label: "Twitter", Value: "@twitterhandle", URL: "https://twitter.com/twitterhandle"},
+			{Label: "GitHub", Value: "github.com/sgires", URL: "https://github.com/sgimres"},
+			{Label: "X", Value: "Who the hell use this..", URL: "https://x.com"},
 			{Label: "Email", Value: "mail@example.com", URL: "mailto:mail@example.com"},
-			{Label: "LinkedIn", Value: "linkedin.com/in/username", URL: "https://linkedin.com/in/username"},
+			{Label: "LinkedIn", Value: "linkedin.com/in/sgimres", URL: "https://linkedin.com/in/sgimres"},
 		},
 		Projects: []Project{
 			{
-				Title:       "🚀 Gopher-TUI",
-				Description: "A powerful toolkit for building **beautiful terminal user interfaces** with reactive components.\nFeatures: **Hot-reloading styles**, custom widgets, and **mouse support**.",
-				Stack:       "Go, Bubble Tea, Lip Gloss",
+				Title:       "🔐 Wardenpy",
+				Description: "**Wardenpy**\nA Python-based **CLI password manager** for the security-conscious.\n Uses**Argon2** and **ChaCha20-Poly1305** because your secrets deserve military-grade encryption without the cloud drama.",
+				Stack:       "Python, Argon2, ChaCha20",
+				URL:         "https://github.com/sgimres/wardenpy",
 			},
 			{
-				Title:       "⚡️ FastRoute",
-				Description: "A **high-performance HTTP router** with zero allocation and middleware support.\nOptimized for **low-latency microservices** using a modified Radix Tree algorithm.",
-				Stack:       "Go, net/http, Radix Tree",
+				Title:       "✍️ Blog CMS",
+				Description: "**Blog CMS**\nA custom **PHP engine** built for speed and simplicity.\nLeveraged **AI-assisted 'vibe coding'** workflows to go from concept to a functional architecture in record time.",
+				Stack:       "PHP, AI-Assisted Development",
+				URL:         "https://github.com/sgimres/blog-cms",
 			},
 			{
-				Title:       "🛡️ Sentinel-Auth",
-				Description: "Distributed **authentication service** with JWT and OAuth2 integration.\nDesigned for **high availability** with multi-region session synchronization.",
-				Stack:       "Go, Redis, PostgreSQL",
-			},
-			{
-				Title:       "📦 Kube-Watch",
-				Description: "Real-time **Kubernetes event monitoring** and notification tool.\nProvides **instant alerts** for deployment failures and resource exhaustion.",
-				Stack:       "Go, client-go, Slack SDK",
-			},
-			{
-				Title:       "🌐 NetMesh",
-				Description: "A lightweight **service mesh** implementation for resource-constrained environments.\nProvides **mutual TLS** and automatic service discovery with minimal overhead.",
-				Stack:       "Go, gRPC, eBPF",
+				Title:       "🌱 Agribase",
+				Description: "**Agribase**\nA comprehensive **agricultural management system** built as a year-end capstone.\nPairs a snappy **Svelte** frontend with a **PocketBase** backend for real-time data that actually feels lightweight.",
+				Stack:       "Svelte, JavaScript, PocketBase",
+				URL:         "https://github.com/sgimres/agribase",
 			},
 		},
 		SkillCategories: []SkillCategory{
 			{
 				Name:   "Languages",
-				Skills: []string{"Go", "Rust", "TypeScript", "C++", "Python"},
+				Skills: []string{"Python", "Rust", "Go", "SQL", "Bash"},
 			},
 			{
-				Name:   "Backend",
-				Skills: []string{"gRPC", "GraphQL", "Postgres", "Redis", "NATS"},
-			},
-			{
-				Name:   "Frontend",
-				Skills: []string{"React", "Tailwind", "Lip Gloss", "Bubble Tea"},
+				Name:   "Data",
+				Skills: []string{"Pandas", "Scikit-Learn", "Matplotlib", "PyTorch"},
 			},
 			{
 				Name:   "Infra",
-				Skills: []string{"K8s", "Docker", "Terraform", "AWS", "CI/CD"},
+				Skills: []string{"Docker", "Podman", "Nix", "Git", "CI/CD"},
+			},
+			{
+				Name:   "Mix",
+				Skills: []string{"Neovim", "Linux", "Svelte", "SysAdmin"},
 			},
 		},
 		SkillAcquisitionLog: []LogEntry{
 			{
+				Date:        "Right Now",
+				Title:       "Machine Learning & Deep Learning",
+				Description: "Currently teaching computers how to think so I don't have to. Diving deep into neural networks and ML frameworks.",
+			},
+			{
 				Date:        "2025 Q4",
-				Title:       "Advanced Rust Mastery",
-				Description: "Mastered memory safety and concurrency patterns in high-load systems.",
+				Title:       "Web Programming II (PHP & Laravel)",
+				Description: "Survived the University Web II module by mastering Laravel. Building clean, robust backends—no spaghetti code allowed.",
 			},
 			{
 				Date:        "2024 Q2",
-				Title:       "K8s Operator Development",
-				Description: "Built custom controllers for automated infrastructure management.",
-			},
-			{
-				Date:        "2023 Q1",
-				Title:       "Distributed Systems Architecture",
-				Description: "Deep dive into consensus algorithms and eventual consistency.",
+				Title:       "NixOS & Declarative Chaos",
+				Description: "Obsessively configuring my self-hosted servers with NixOS. If it's not declarative and reproducible, I don't want it.",
 			},
 		},
 		OSSContributionLog: []LogEntry{
 			{
-				Date:        "Feb 2026",
-				Title:       "Bubble Tea #1283",
-				Description: "Implemented advanced mouse scroll event handling for grid components.",
-				URL:         "https://github.com/charmbracelet/bubbletea/pull/1283",
+				Date:        "Sep 2025",
+				Title:       "auto-cpufreq #883",
+				Description: "Fix: support **charging thresholds for Asus ExpertBook laptops**",
+				URL:         "https://github.com/AdnanHodzic/auto-cpufreq/pull/883",
 			},
 			{
-				Date:        "Dec 2025",
-				Title:       "Lip Gloss #455",
-				Description: "Fixed color profile detection on rare terminal emulators.",
-				URL:         "https://github.com/charmbracelet/lipgloss/pull/455",
+				Date:        "Sep 2025",
+				Title:       "auto-cpufreq #884",
+				Description: "Fix: add additional file paths for edge case",
+				URL:         "https://github.com/AdnanHodzic/auto-cpufreq/pull/884",
 			},
 			{
-				Date:        "Oct 2025",
-				Title:       "Go-Redis #2102",
-				Description: "Improved connection pooling efficiency for high-latency networks.",
-				URL:         "https://github.com/go-redis/redis/pull/2102",
+				Date:        "Jun 2024",
+				Title:       "gruvbox-material #206",
+				Description: "Integrated native color palette support for the Neovim rainbow-delimiters plugin directly into the overarching theme",
+				URL:         "https://github.com/sainnhe/gruvbox-material/pull/206",
 			},
 		},
 	}

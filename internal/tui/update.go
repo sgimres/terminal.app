@@ -129,6 +129,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 		case "enter":
+			if m.Sections[m.ActiveSection] == "Projects" {
+				if m.ActiveProject < len(m.FilteredProjects) {
+					url := m.FilteredProjects[m.ActiveProject].URL
+					if url != "" {
+						m.CopyURL = url
+						return m, clearCopyURLAfterDelay()
+					}
+				}
+			}
 			if m.Sections[m.ActiveSection] == "Skills" && !m.SkillGridFocus {
 				if m.ActiveSkillLog < len(m.OSSContributionLog) {
 					m.CopyURL = m.OSSContributionLog[m.ActiveSkillLog].URL
