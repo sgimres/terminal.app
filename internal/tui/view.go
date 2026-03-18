@@ -111,6 +111,11 @@ func (m Model) renderSignModal() string {
 		descValue = m.Styles.FilterInput.Background(lipgloss.Color("237")).Render(m.SignDescription + "_")
 	}
 
+	footerHint := "tab: next  •  enter: submit  •  esc: cancel"
+	if m.SignError != "" {
+		footerHint = m.SignError + "  •  press any key to continue"
+	}
+
 	content := lipgloss.JoinVertical(lipgloss.Left,
 		m.Styles.ModalTitle.Render("Sign Guestbook"),
 		"",
@@ -120,7 +125,7 @@ func (m Model) renderSignModal() string {
 		descLabel,
 		descValue,
 		"",
-		m.Styles.Footer.Render("tab: next  •  enter: submit  •  esc: cancel"),
+		m.Styles.Footer.Render(footerHint),
 	)
 
 	box := m.Styles.ModalBox.Render(content)

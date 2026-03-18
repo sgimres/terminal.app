@@ -40,6 +40,7 @@ type Model struct {
 	SignDescription     string
 	SignField           int
 	SignSuccess         bool
+	SignError           string
 	Styles              Styles
 	Width               int
 	Height              int

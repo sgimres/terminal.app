@@ -30,9 +30,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyPressMsg:
 		if m.SignModal {
-			if m.SignSuccess {
+			if m.SignSuccess || m.SignError != "" {
 				m.SignModal = false
 				m.SignSuccess = false
+				m.SignError = ""
 				return m, nil
 			}
 			switch msg.String() {
@@ -41,6 +42,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SignName = ""
 				m.SignDescription = ""
 				m.SignSuccess = false
+				m.SignError = ""
 				return m, nil
 			case "tab":
 				if m.SignField == 0 {
@@ -50,13 +52,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 				return m, nil
 			case "enter":
-				if m.SignName != "" && m.SignDescription != "" {
-					err := data.AddGuestbookEntry(m.SignName, m.SignDescription)
-					if err != nil {
-						return m, nil
-					}
-					m.SignSuccess = true
+				if m.SignName == "" || m.SignDescription == "" {
+					m.SignError = "please fill all fields"
+					return m, nil
 				}
+				err := data.AddGuestbookEntry(m.SignName, m.SignDescription)
+				if err != nil {
+					m.SignError = "error saving: " + err.Error()
+					return m, nil
+				}
+				m.SignSuccess = true
 				return m, nil
 			case "backspace":
 				if m.SignField == 0 {
@@ -225,6 +230,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SignName = ""
 				m.SignDescription = ""
 				m.SignField = 0
+				m.SignSuccess = false
+				m.SignError = ""
 				return m, nil
 			}
 		}

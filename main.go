@@ -12,6 +12,7 @@ import (
 	"syscall"
 	"time"
 
+	"profile/internal/data"
 	"profile/internal/tui"
 
 	tea "charm.land/bubbletea/v2"
@@ -29,6 +30,10 @@ const (
 )
 
 func main() {
+	if err := data.InitGuestbookDB(); err != nil {
+		log.Error("Could not initialize guestbook database", "error", err)
+	}
+
 	s, err := wish.NewServer(
 		wish.WithAddress(net.JoinHostPort(host, port)),
 		wish.WithHostKeyPath(".ssh/id_ed25519"),
