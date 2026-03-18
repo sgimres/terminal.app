@@ -74,10 +74,57 @@ func (m Model) View() tea.View {
 		footerCentered,
 	))
 
+	if m.SignModal {
+		modal := m.renderSignModal()
+		if m.Width > 0 && m.Height > 0 {
+			return tea.NewView(lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal))
+		}
+		return tea.NewView(modal)
+	}
+
 	if m.Width > 0 && m.Height > 0 {
 		return tea.NewView(lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, finalView))
 	}
 	return tea.NewView(finalView)
+}
+
+func (m Model) renderSignModal() string {
+	if m.SignSuccess {
+		content := lipgloss.JoinVertical(lipgloss.Center,
+			m.Styles.ModalTitle.Render("Thank You!"),
+			"",
+			m.Styles.CardValue.Render("Your message has been saved."),
+		)
+		box := m.Styles.ModalBox.Render(content)
+		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, box)
+	}
+
+	nameLabel := m.Styles.CardLabel.Render("Your Name:")
+	nameValue := m.Styles.FilterInput.Render(m.SignName)
+	if m.SignField == 0 {
+		nameValue = m.Styles.FilterInput.Background(lipgloss.Color("237")).Render(m.SignName + "_")
+	}
+
+	descLabel := m.Styles.CardLabel.Render("Message:")
+	descValue := m.Styles.FilterInput.Render(m.SignDescription)
+	if m.SignField == 1 {
+		descValue = m.Styles.FilterInput.Background(lipgloss.Color("237")).Render(m.SignDescription + "_")
+	}
+
+	content := lipgloss.JoinVertical(lipgloss.Left,
+		m.Styles.ModalTitle.Render("Sign Guestbook"),
+		"",
+		nameLabel,
+		nameValue,
+		"",
+		descLabel,
+		descValue,
+		"",
+		m.Styles.Footer.Render("tab: next  •  enter: submit  •  esc: cancel"),
+	)
+
+	box := m.Styles.ModalBox.Render(content)
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, box)
 }
 
 func (m Model) renderProjects() string {
@@ -260,6 +307,8 @@ func (m Model) renderFooter() string {
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("navigate"))
 			footerItems = append(footerItems, m.Styles.KeyHint.Render("enter"))
 			footerItems = append(footerItems, m.Styles.Shortcut.Render("open link"))
+			footerItems = append(footerItems, m.Styles.KeyHint.Render("g"))
+			footerItems = append(footerItems, m.Styles.Shortcut.Render("sign"))
 		}
 
 		footerItems = append(footerItems, m.Styles.KeyHint.Render("q"))

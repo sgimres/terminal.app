@@ -5,6 +5,8 @@ import (
 	"runtime"
 	"strings"
 
+	"profile/internal/data"
+
 	"charm.land/bubbles/v2/spinner"
 	tea "charm.land/bubbletea/v2"
 )
@@ -27,6 +29,62 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 
 	case tea.KeyPressMsg:
+		if m.SignModal {
+			if m.SignSuccess {
+				m.SignModal = false
+				m.SignSuccess = false
+				return m, nil
+			}
+			switch msg.String() {
+			case "esc":
+				m.SignModal = false
+				m.SignName = ""
+				m.SignDescription = ""
+				m.SignSuccess = false
+				return m, nil
+			case "tab":
+				if m.SignField == 0 {
+					m.SignField = 1
+				} else {
+					m.SignField = 0
+				}
+				return m, nil
+			case "enter":
+				if m.SignName != "" && m.SignDescription != "" {
+					err := data.AddGuestbookEntry(m.SignName, m.SignDescription)
+					if err != nil {
+						return m, nil
+					}
+					m.SignSuccess = true
+				}
+				return m, nil
+			case "backspace":
+				if m.SignField == 0 {
+					if len(m.SignName) > 0 {
+						m.SignName = m.SignName[:len(m.SignName)-1]
+					}
+				} else {
+					if len(m.SignDescription) > 0 {
+						m.SignDescription = m.SignDescription[:len(m.SignDescription)-1]
+					}
+				}
+				return m, nil
+			default:
+				keyStr := msg.String()
+				if keyStr == "space" {
+					keyStr = " "
+				}
+				if keyStr != "" && keyStr != "space" {
+					if m.SignField == 0 {
+						m.SignName += keyStr
+					} else {
+						m.SignDescription += keyStr
+					}
+				}
+				return m, nil
+			}
+		}
+
 		if m.Filtering {
 			switch msg.String() {
 			case "esc", "enter":
@@ -156,9 +214,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				shortcut := strings.ToLower(string(section[0]))
 				if key == shortcut {
 					m.ActiveSection = i
-					m.SkillGridFocus = false // Reset focus when switching tabs
+					m.SkillGridFocus = false
 					return m, nil
 				}
+			}
+			if key == "g" && m.Sections[m.ActiveSection] == "Contact" {
+				m.SignModal = true
+				m.SignName = ""
+				m.SignDescription = ""
+				m.SignField = 0
+				return m, nil
 			}
 		}
 	}

@@ -35,6 +35,11 @@ type Model struct {
 	SkillGridFocus      bool
 	Loading             bool
 	Spinner             spinner.Model
+	SignModal           bool
+	SignName            string
+	SignDescription     string
+	SignField           int
+	SignSuccess         bool
 	Styles              Styles
 	Width               int
 	Height              int

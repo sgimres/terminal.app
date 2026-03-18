@@ -49,6 +49,10 @@ type Styles struct {
 	CardLabel          lipgloss.Style
 	CardValue          lipgloss.Style
 	CardStatus         lipgloss.Style
+	ModalOverlay       lipgloss.Style
+	ModalBox           lipgloss.Style
+	ModalTitle         lipgloss.Style
+	ThankYouMessage    lipgloss.Style
 	Accent             color.Color
 	Dim                color.Color
 }
@@ -204,5 +208,19 @@ func InitialStyles() Styles {
 			Foreground(accent).
 			Background(lipgloss.Color("237")).
 			Padding(0, 1),
+		ModalOverlay: lipgloss.NewStyle().
+			Background(lipgloss.Color("235")).
+			Foreground(lipgloss.Color("252")),
+		ModalBox: lipgloss.NewStyle().
+			Border(lipgloss.NormalBorder()).
+			BorderForeground(accent).
+			Padding(2, 4),
+		ModalTitle: lipgloss.NewStyle().
+			Foreground(accent).
+			Bold(true).
+			MarginBottom(2),
+		ThankYouMessage: lipgloss.NewStyle().
+			Foreground(accent).
+			Bold(true),
 	}
 }
