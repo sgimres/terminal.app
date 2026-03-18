@@ -56,7 +56,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.SignError = "please fill all fields"
 					return m, nil
 				}
-				err := data.AddGuestbookEntry(m.SignName, m.SignDescription)
+				err := data.AddGuestbookEntry(m.SignName, m.SignDescription, data.GetDB())
 				if err != nil {
 					m.SignError = "error saving: " + err.Error()
 					return m, nil

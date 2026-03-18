@@ -3,9 +3,12 @@ package data
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"os"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/joho/godotenv"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 type GuestbookEntry struct {
@@ -18,9 +21,25 @@ type GuestbookEntry struct {
 var db *sql.DB
 
 func InitGuestbookDB() error {
-	dbPath := "./db.sqlite3"
 	var err error
-	db, err = sql.Open("sqlite3", dbPath)
+
+	err = godotenv.Load()
+	if err != nil {
+		return errors.New("error loading .env file")
+	}
+
+	url := os.Getenv("TURSO_DATABASE_URL")
+	token := os.Getenv("TURSO_AUTH_TOKEN")
+
+	if url == "" {
+		return errors.New("TURSO_DATABASE_URL not set")
+	}
+
+	if token != "" {
+		url = fmt.Sprintf("%s?authToken=%s", url, token)
+	}
+
+	db, err = sql.Open("libsql", url)
 	if err != nil {
 		return err
 	}
@@ -37,16 +56,10 @@ func InitGuestbookDB() error {
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		)
 	`)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
-func AddGuestbookEntry(name, description string) error {
-	if db == nil {
-		return errors.New("database not initialized")
-	}
+func AddGuestbookEntry(name, description string, db *sql.DB) error {
 	_, err := db.Exec(
 		"INSERT INTO guestbook (name, description) VALUES (?, ?)",
 		name, description,
@@ -58,4 +71,8 @@ func CloseGuestbookDB() {
 	if db != nil {
 		db.Close()
 	}
+}
+
+func GetDB() *sql.DB {
+	return db
 }
