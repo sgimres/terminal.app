@@ -57,7 +57,7 @@ type Styles struct {
 // InitialStyles returns the default styles for the application
 func InitialStyles() Styles {
 	accent := lipgloss.Color("252") // Off-white
-	dim := lipgloss.Color("239")    // Much darker grey for better contrast with bold
+	dim := lipgloss.Color("245")    // Light grey for better readability
 	border := lipgloss.Color("237") // Dark grey border
 
 	return Styles{
