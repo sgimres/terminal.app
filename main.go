@@ -12,14 +12,14 @@ import (
 
 func main() {
 	if err := data.InitGuestbookDB(); err != nil {
-		fmt.Printf("Failed to initialize guestbook database: %v", err)
+		fmt.Fprintf(os.Stderr, "Failed to initialize guestbook database: %v\n", err)
 		os.Exit(1)
 	}
 	defer data.CloseGuestbookDB()
 
 	p := tea.NewProgram(tui.InitialModel())
 	if _, err := p.Run(); err != nil {
-		fmt.Printf("Alas, there's been an error: %v", err)
+		fmt.Fprintf(os.Stderr, "Alas, there's been an error: %v\n", err)
 		os.Exit(1)
 	}
 }

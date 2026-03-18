@@ -220,13 +220,10 @@ func (m Model) renderSkills() string {
 	ossEntries = append(ossEntries, m.Styles.SectionHeader.Render("OSS CONTRIBUTION LOG"))
 	for i, entry := range m.OSSContributionLog {
 		date := m.Styles.LogDate.Render(entry.Date)
-		titleStyle := m.Styles.LogTitle
+		title := m.Styles.LogTitle.Render(strings.ToLower(entry.Title))
 		if !m.SkillGridFocus && i == m.ActiveSkillLog {
-			// :TODO investigate later
-			// titleStyle = titleStyle.Copy().Background(lipgloss.Color("237"))
-			titleStyle = titleStyle.Background(lipgloss.Color("237"))
+			title = m.Styles.LogTitle.Background(lipgloss.Color("237")).Render(strings.ToLower(entry.Title))
 		}
-		title := titleStyle.Render(strings.ToLower(entry.Title))
 		desc := m.Styles.LogDesc.Render(entry.Description)
 
 		row := lipgloss.JoinHorizontal(lipgloss.Top, date, lipgloss.JoinVertical(lipgloss.Left, title, desc))

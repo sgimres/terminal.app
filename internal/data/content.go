@@ -49,13 +49,13 @@ func GetDefaultPortfolio() Portfolio {
 		Sections: []string{"About", "Projects", "Skills", "Contact"},
 		Content: map[string]string{
 			"About":   "Welcome! I'm a passionate Go developer who loves building **beautiful terminal user interfaces** and high-performance backend systems.\nI enjoy solving complex problems and exploring new technologies. Currently focusing on distributed systems and terminal-based developer tools.",
-			"Contact": "GitHub: github.com/username\nTwitter: @twitterhandle\nEmail: mail@example.com\nLinkedIn: listarstnkedin.com/in/username",
+			"Contact": "GitHub: github.com/username\nTwitter: @twitterhandle\nEmail: mail@example.com\nLinkedIn: linkedin.com/in/username",
 		},
 		Dependencies: map[string][]string{
 			"Go":     {"Bubble Tea", "Lip Gloss", "Gin", "Gorm"},
 			"Python": {"NumPy", "Pandas", "Scikit-Learn", "FastAPI"},
 			"React":  {"Next.js", "Tailwind", "Redux", "Zustand"},
-			"Rust":   {"Helm", "Kustomize", "Client-go", "Prometheus"},
+			"Rust":   {"Tokio", "Serde", "Actix", "Rustfmt"},
 		},
 		ContactName:   "Go Developer",
 		ContactTitle:  "Terminal Enthusiast",

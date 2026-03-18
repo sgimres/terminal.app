@@ -13,13 +13,11 @@ type Styles struct {
 	ActiveTab          lipgloss.Style
 	TabShortcut        lipgloss.Style
 	TabLabel           lipgloss.Style
-	TabsContainer      lipgloss.Style
 	ContentArea        lipgloss.Style
 	Header             lipgloss.Style
 	Footer             lipgloss.Style
 	KeyHint            lipgloss.Style
 	Shortcut           lipgloss.Style
-	Spinner            lipgloss.Style
 	ProjectTitle       lipgloss.Style
 	ProjectDescription lipgloss.Style
 	DescriptionText    lipgloss.Style
@@ -49,10 +47,8 @@ type Styles struct {
 	CardLabel          lipgloss.Style
 	CardValue          lipgloss.Style
 	CardStatus         lipgloss.Style
-	ModalOverlay       lipgloss.Style
 	ModalBox           lipgloss.Style
 	ModalTitle         lipgloss.Style
-	ThankYouMessage    lipgloss.Style
 	Accent             color.Color
 	Dim                color.Color
 }
@@ -84,8 +80,6 @@ func InitialStyles() Styles {
 			Bold(true),
 		TabLabel: lipgloss.NewStyle().
 			Foreground(dim),
-		TabsContainer: lipgloss.NewStyle().
-			Align(lipgloss.Center),
 		ContentArea: lipgloss.NewStyle().
 			Width(76),
 		Header: lipgloss.NewStyle().
@@ -102,8 +96,6 @@ func InitialStyles() Styles {
 		Shortcut: lipgloss.NewStyle().
 			Foreground(dim).
 			MarginRight(3),
-		Spinner: lipgloss.NewStyle().
-			Foreground(accent),
 		ProjectTitle: lipgloss.NewStyle().
 			Foreground(accent).
 			Bold(true).
@@ -208,9 +200,6 @@ func InitialStyles() Styles {
 			Foreground(accent).
 			Background(lipgloss.Color("237")).
 			Padding(0, 1),
-		ModalOverlay: lipgloss.NewStyle().
-			Background(lipgloss.Color("235")).
-			Foreground(lipgloss.Color("252")),
 		ModalBox: lipgloss.NewStyle().
 			Border(lipgloss.NormalBorder()).
 			BorderForeground(accent).
@@ -219,8 +208,5 @@ func InitialStyles() Styles {
 			Foreground(accent).
 			Bold(true).
 			MarginBottom(2),
-		ThankYouMessage: lipgloss.NewStyle().
-			Foreground(accent).
-			Bold(true),
 	}
 }

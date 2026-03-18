@@ -89,6 +89,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch msg.String() {
 			case "esc", "enter":
 				m.Filtering = false
+				m.FilterText = ""
+				m.ActiveProject = 0
 			case "backspace":
 				if len(m.FilterText) > 0 {
 					m.FilterText = m.FilterText[:len(m.FilterText)-1]
