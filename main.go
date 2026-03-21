@@ -22,14 +22,20 @@ import (
 	"charm.land/wish/v2/bubbletea"
 	"charm.land/wish/v2/logging"
 	"github.com/charmbracelet/ssh"
+	"github.com/joho/godotenv"
 )
 
-const (
-	host = "localhost"
-	port = "23234"
-)
+var host, port string
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Error("read env failed", err)
+	}
+
+	host = os.Getenv("HOST")
+	port = os.Getenv("PORT")
+
 	if err := data.InitGuestbookDB(); err != nil {
 		log.Error("Could not initialize guestbook database", "error", err)
 	}
