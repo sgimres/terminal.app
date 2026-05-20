@@ -387,10 +387,16 @@ func (m Model) renderContact() string {
 	for i, link := range m.ContactLinks {
 		var label, value, url string
 		if i == m.ActiveContactLink {
+
 			label = m.Styles.CardLabel.Background(lipgloss.Color("237")).Render(link.Label + ":")
 			value = m.Styles.CardValue.Background(lipgloss.Color("237")).Render(link.Value)
+
+			if link.URL == "" {
+				link.URL = "example.com"
+			}
 			if link.URL != "" {
-				url = m.Styles.CardValue.Background(lipgloss.Color("237")).Foreground(lipgloss.Color("226")).Render(link.URL)
+				// url = m.Styles.CardValue.Background(lipgloss.Color("237")).Foreground(lipgloss.Color("226")).Render(link.URL)
+				url = lipgloss.NewStyle().Foreground(lipgloss.Color("12")).Hyperlink(link.URL).Render(link.URL)
 			}
 		} else {
 			label = m.Styles.CardLabel.Render(link.Label + ":")

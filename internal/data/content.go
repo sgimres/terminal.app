@@ -63,7 +63,7 @@ func GetDefaultPortfolio() Portfolio {
 		ContactTitle:  "Terminal Enthusiast",
 		ContactStatus: "Let’s get to work.",
 		ContactLinks: []ContactLink{
-			{Label: "GitHub", Value: "github.com/sgires", URL: "https://github.com/sgimres"},
+			{Label: "GitHub", Value: "github.com/sgimres", URL: "https://github.com/sgimres"},
 			{Label: "X", Value: "Who the hell use this..", URL: "https://x.com"},
 			{Label: "Email", Value: "mail@example.com", URL: "mailto:mail@example.com"},
 			{Label: "LinkedIn", Value: "linkedin.com/in/sgimres", URL: "https://linkedin.com/in/sgimres"},
