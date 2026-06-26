@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"errors"
+	"flag"
 	"net"
 	"os"
 	"os/signal"
@@ -22,26 +23,30 @@ import (
 	"charm.land/wish/v2/bubbletea"
 	"charm.land/wish/v2/logging"
 	"github.com/charmbracelet/ssh"
-	"github.com/joho/godotenv"
 )
 
-var host, port string
+const (
+	hostDev        string = "127.0.0.1"
+	hostProduction string = "0.0.0.0"
+)
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Error("read env failed", err)
+	isProd := flag.Bool("prod", false, "RUNNIG MODE")
+	port := flag.String("port", "9999", "PORT")
+
+	flag.Parse()
+
+	host := hostDev
+	if *isProd {
+		host = hostProduction
 	}
 
-	host = os.Getenv("HOST")
-	port = os.Getenv("PORT")
-
 	if err := data.InitGuestbookDB(); err != nil {
-		log.Error("Could not initialize guestbook database", "error", err)
+		log.Fatal("Could not initialize guestbook database", "error", err)
 	}
 
 	s, err := wish.NewServer(
-		wish.WithAddress(net.JoinHostPort(host, port)),
+		wish.WithAddress(net.JoinHostPort(host, *port)),
 		wish.WithHostKeyPath(".ssh/id_ed25519"),
 		wish.WithMiddleware(
 			bubbletea.Middleware(teaHandler),
@@ -55,7 +60,7 @@ func main() {
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	log.Info("Starting SSH server", "host", host, "port", port)
+	log.Info("Starting SSH server", "host", host, "port", *port)
 	go func() {
 		if err = s.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
 			log.Error("Could not start server", "error", err)
