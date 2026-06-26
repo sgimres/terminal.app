@@ -2,12 +2,11 @@ package data
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
+	"charm.land/log/v2"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
@@ -23,21 +22,19 @@ var db *sql.DB
 func InitGuestbookDB() error {
 	var err error
 
-	err = godotenv.Load()
-	if err != nil {
-		return errors.New("error loading .env file")
+	url, ok := os.LookupEnv("TURSO_DATABASE_URL")
+
+	if !ok {
+		log.Error("TURSO_DATABASE_URL not set")
 	}
 
-	url := os.Getenv("TURSO_DATABASE_URL")
-	token := os.Getenv("TURSO_AUTH_TOKEN")
+	token, ok := os.LookupEnv("TURSO_AUTH_TOKEN")
 
-	if url == "" {
-		return errors.New("TURSO_DATABASE_URL not set")
+	if !ok {
+		log.Error("TURSO_AUTH_TOKEN not set")
 	}
 
-	if token != "" {
-		url = fmt.Sprintf("%s?authToken=%s", url, token)
-	}
+	url = fmt.Sprintf("%s?authToken=%s", url, token)
 
 	db, err = sql.Open("libsql", url)
 	if err != nil {
